@@ -63,3 +63,4 @@ for sms in test_messages:
     print(f"Score: {result['score']}/100")
     print(f"Verdict: {result['verdict']}")
     print(f"Reasons: {result['reasons']}")
+    

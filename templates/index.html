@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ AI ScamShield</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1em;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #764ba2;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.safe {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+        
+        .result.suspicious {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+        }
+        
+        .result.dangerous {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+        
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .verdict {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .reasons {
+            margin-top: 15px;
+        }
+        
+        .reasons h4 {
+            margin-bottom: 10px;
+        }
+        
+        .reasons ul {
+            margin-left: 20px;
+        }
+        
+        .reasons li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ AI ScamShield India</h1>
+        <p class="subtitle">Protect yourself from digital scams</p>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('url')">Check URL</button>
+            <button class="tab-button" onclick="switchTab('sms')">Check SMS</button>
+            <button class="tab-button" onclick="switchTab('job')">Check Job Offer</button>
+        </div>
+        
+        <!-- URL Tab -->
+        <div id="url" class="tab-content active">
+            <div class="input-group">
+                <label>Paste a URL to check:</label>
+                <input type="text" id="url-input" placeholder="https://example.com">
+            </div>
+            <button onclick="checkURL()">Analyze URL</button>
+            <div id="url-result" class="result"></div>
+        </div>
+        
+        <!-- SMS Tab -->
+        <div id="sms" class="tab-content">
+            <div class="input-group">
+                <label>Paste an SMS message to check:</label>
+                <textarea id="sms-input" placeholder="Paste the message here..."></textarea>
+            </div>
+            <button onclick="checkSMS()">Analyze SMS</button>
+            <div id="sms-result" class="result"></div>
+        </div>
+        
+        <!-- Job Tab -->
+        <div id="job" class="tab-content">
+            <div class="input-group">
+                <label>Paste a job offer to check:</label>
+                <textarea id="job-input" placeholder="Paste the job description here..."></textarea>
+            </div>
+            <button onclick="checkJob()">Analyze Job Offer</button>
+            <div id="job-result" class="result"></div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Highlight button
+            event.target.classList.add('active');
+        }
+        
+        function displayResult(resultDiv, data) {
+            const result = document.getElementById(resultDiv);
+            const verdict = data.verdict.toLowerCase();
+            
+            let verdictClass = 'safe';
+            if (verdict.includes('dangerous')) verdictClass = 'dangerous';
+            else if (verdict.includes('suspicious')) verdictClass = 'suspicious';
+            
+            result.className = `result show ${verdictClass}`;
+            
+            let html = `
+                <div class="verdict">⚠️ ${data.verdict}</div>
+                <div class="score">Score: ${data.score}/100</div>
+            `;
+            
+            if (data.reasons && data.reasons.length > 0) {
+                html += `
+                    <div class="reasons">
+                        <h4>Reasons:</h4>
+                        <ul>
+                            ${data.reasons.map(r => `<li>${r}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            result.innerHTML = html;
+        }
+        
+        function checkURL() {
+            const url = document.getElementById('url-input').value;
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            
+            fetch('/check-url', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({url: url})
+            })
+            .then(response => response.json())
+            .then(data => displayResult('url-result', data));
+        }
+        
+        function checkSMS() {
+            const message = document.getElementById('sms-input').value;
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
+            
+            fetch('/check-sms', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: message})
+            })
+            .then(response => response.json())
+            .then(data => displayResult('sms-result', data));
+        }
+        
+        function checkJob() {
+            const jobText = document.getElementById('job-input').value;
+            if (!jobText) {
+                alert('Please enter a job offer');
+                return;
+            }
+            
+            fetch('/check-job', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({job_text: jobText})
+            })
+            .then(response => response.json())
+            .then(data => displayResult('job-result', data));
+        }
+    </script>
+</body>
+</html>
