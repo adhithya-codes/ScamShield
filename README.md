@@ -11,6 +11,22 @@ India loses crores every year to digital scams — fake URLs, scam SMS, QR fraud
 - **QR Code Scanner** — Detects malicious QR codes
 - **Fake Job Detector** — Identifies fraudulent job postings
 
+## 🖥️ Web Interface
+
+ScamShield has a live web interface built with Flask:
+
+```bash
+python3 app.py
+# Visit http://127.0.0.1:5000
+```
+
+Features:
+- Paste URL and get instant analysis
+- Check SMS messages for scams
+- Validate job offers
+
+All with real-time scoring and detailed reasons.
+
 ## 🛠️ Tech Stack
 - Python 3.14
 - OpenCV
